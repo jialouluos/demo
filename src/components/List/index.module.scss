@@ -1,0 +1,33 @@
+@import '@/styles/global';
+@include media_slot(('tv')) {
+	.list {
+		column-count: 6 !important;
+	}
+}
+@include media_slot(('desktop')) {
+	.list {
+		column-count: 5 !important;
+	}
+}
+@include media_slot(('phone')) {
+	.list {
+		column-count: 3 !important;
+	}
+}
+.list {
+	width: 100%;
+	height: max-content;
+	min-height: rem(30);
+	padding: rem(0.5) 0;
+
+	//网格方案
+	// display: grid;
+	// grid-template-columns: repeat(auto-fill, rem(14));
+	// grid-gap: rem(1);
+	// justify-content: space-between;
+	// align-content: flex-start;
+
+	//瀑布流方案
+	column-count: 4;
+	column-gap: rem(1);
+}

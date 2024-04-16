@@ -1,0 +1,27 @@
+@import '@/styles/global';
+$msg_height: 60px;
+
+.modal_mask {
+	@include center();
+	position: fixed;
+	@include fill();
+	z-index: 9999;
+	outline: 0;
+	inset: 0;
+	.modal_container {
+		min-width: 80vw;
+		height: auto;
+		background: var(--box-bg);
+		padding: 20px;
+		@include shadow();
+		position: relative;
+		border-radius: 5px;
+	}
+}
+
+.show {
+	@include show(0, $msg_height, 0.5s, show_msg);
+}
+.hidden {
+	@include hidden($msg_height, 0, 0.5s, hidden_msg);
+}

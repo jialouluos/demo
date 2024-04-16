@@ -1,0 +1,191 @@
+@mixin pointer() {
+	cursor: pointer;
+}
+@mixin center() {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+@mixin shadow {
+	box-shadow: 0 rem(0.1) rem(0.2) rem(0) var(--shadow);
+}
+@mixin shadow_hover($is_strong) {
+	@include shadow();
+	transition: all 0.3s;
+	&:hover {
+		@if ($is_strong == 1) {
+			box-shadow: 0 rem(0.2) rem(0.4) rem(0.2) var(--shadow);
+		} @else {
+			box-shadow: 0 rem(0.1) rem(0.4) rem(0) var(--shadow);
+		}
+	}
+}
+@mixin tag_border_radius {
+	border-radius: rem(0.2);
+}
+@mixin border_radius {
+	border-radius: rem(0.5);
+}
+@mixin border {
+	border: 1px solid var(--primary-a5);
+}
+@mixin fill {
+	width: 100%;
+	height: 100%;
+}
+@mixin box {
+	background-color: var(--box-bg);
+	@include border_radius();
+	@include shadow_hover(1);
+}
+@mixin simple_box {
+	background-color: var(--box-bg);
+	@include border_radius();
+	@include shadow_hover(0);
+}
+@mixin show($startY, $entY, $time, $animationName) {
+	animation: $animationName $time cubic-bezier(0.25, 0.46, 0.45, 0.94) 1 forwards;
+	@include keyframes($animationName) {
+		from {
+			opacity: 0;
+			transform: translate3d(0, #{$startY}, 0);
+		}
+		to {
+			opacity: 1;
+			transform: translate3d(0, #{$entY}, 0);
+		}
+	}
+}
+@mixin hidden($startY, $entY, $time, $animationName) {
+	animation: $animationName $time cubic-bezier(0.25, 0.46, 0.45, 0.94) 1 forwards;
+	@include keyframes($animationName) {
+		from {
+			opacity: 1;
+			transform: translate3d(0, #{$startY}, 0);
+		}
+		to {
+			opacity: 0;
+			transform: translate3d(0, #{$entY}, 0);
+		}
+	}
+}
+@mixin keyframes($animationName) {
+	@-webkit-keyframes #{$animationName} {
+		@content;
+	}
+	@-moz-keyframes #{$animationName} {
+		@content;
+	}
+	@-o-keyframes #{$animationName} {
+		@content;
+	}
+	@keyframes #{$animationName} {
+		@content;
+	}
+}
+@mixin scrollbar($width, $height, $color) {
+	::-webkit-scrollbar-button {
+		background: 0 0;
+		height: 0;
+	}
+	::-webkit-scrollbar {
+		width: $width;
+		height: $height;
+		background: 0 0;
+	}
+	::-webkit-scrollbar-track {
+		border-radius: 0.3125rem;
+		background: 0 0;
+	}
+	::-webkit-scrollbar-thumb {
+		border-radius: 1.25rem;
+		background-color: $color;
+	}
+}
+@mixin collapsed() {
+	height: 0px;
+	overflow: hidden;
+	transition: all 0.3s;
+}
+@mixin collapsible() {
+	transition: all 1s;
+	overflow: hidden;
+}
+@mixin text_bg() {
+	@include test_style();
+	background-image: linear-gradient(90deg, var(--grey-9-a1) 3%, transparent 0),
+		linear-gradient(1turn, var(--grey-9-a1) 3%, transparent 0);
+	background-size: rem(1) rem(1);
+}
+@mixin test_style {
+	letter-spacing: rem(0.1);
+	word-break: break-all;
+	font-size: rem(0.9);
+	line-height: 1.75;
+}
+//媒体查询
+$break_points: (
+	'phone': (
+		20px,
+		481px,
+	),
+	'pad': (
+		481px,
+		795px,
+	),
+	'command': (
+		795px,
+		946px,
+	),
+	'notebook': (
+		946px,
+		1201px,
+	),
+	'desktop': (
+		1201px,
+		1600px,
+	),
+	'tv': 1600px,
+);
+@mixin media_slot($break_name) {
+	@if type-of($break_name) == 'list' {
+		@each $item in $break_name {
+			$bp: map-get($break_points, $item);
+			@if type-of($bp) == 'list' {
+				$min: nth($bp, 1);
+				$max: nth($bp, 2);
+				@media (min-width: $min) and (max-width: $max) {
+					@content;
+				}
+			} @else {
+				@media (min-width: $bp) {
+					@content;
+				}
+			}
+		}
+	} @else {
+		$bp: map-get($break_points, $break_name);
+		@if type-of($bp) == 'list' {
+			$min: nth($bp, 1);
+			$max: nth($bp, 2);
+			@media (min-width: $min) and (max-width: $max) {
+				@content;
+			}
+		} @else {
+			@media (min-width: $bp) {
+				@content;
+			}
+		}
+	}
+}
+
+$designWidth: 750 !default;
+$rootSize2: 16 !default;
+$designRatio: 2 !default;
+@function rem($val) {
+	@return ($val) * 1rem;
+}
+@function rootVw($rootSize) {
+	@return $rootSize * 1px;
+}
