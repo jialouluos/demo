@@ -10,5 +10,5 @@ COPY demo.conf $APP_PATH
 
 COPY ssl/ $APP_PATH/ssl
 COPY nginx.conf /etc/nginx/conf.d/a_nginx.conf
-RUN nginx -s reload;
+
 EXPOSE 80
