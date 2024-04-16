@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { EventEmitter } from 'eventemitter3';
-import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
 import { OrbitControls } from './_controls';
 import { Stats } from './_stats';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';

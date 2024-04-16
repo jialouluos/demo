@@ -9,5 +9,5 @@ COPY dist/ $APP_PATH
 COPY demo.conf $APP_PATH
 
 COPY ssl/ $APP_PATH/ssl
-COPY nginx.conf /etc/nginx/conf.d/demo.conf
+COPY nginx.conf /etc/nginx/conf.d/nginx.conf
 EXPOSE 80
