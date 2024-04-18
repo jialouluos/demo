@@ -4,4 +4,5 @@ export interface DEMO {
     element: JSX.Element;
     dec: string;
     pre_img: string;
+    zh?: string;
 }

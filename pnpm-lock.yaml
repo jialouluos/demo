@@ -69,6 +69,9 @@ devDependencies:
   three:
     specifier: ^0.163.0
     version: 0.163.0
+  three-bas:
+    specifier: ^3.0.0
+    version: 3.0.0(three@0.163.0)
   typescript:
     specifier: ^5.2.2
     version: 5.2.2
@@ -1909,6 +1912,14 @@ packages:
 
   /text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
+    dev: true
+
+  /three-bas@3.0.0(three@0.163.0):
+    resolution: {integrity: sha512-2YJL4loaPS4FBuH1HRVg8EefTfJl2LxrYWC3qqTMoZmCbZGDXwlZ/2UAOmjEtBcLUbLbwv8bn+eHAcu/jFgwLw==}
+    peerDependencies:
+      three: '*'
+    dependencies:
+      three: 0.163.0
     dev: true
 
   /three@0.163.0:

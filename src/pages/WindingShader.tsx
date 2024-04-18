@@ -1,4 +1,4 @@
-import { Winding } from '@/demo/winding';
+import { Winding } from '@/demo/shader/winding';
 import { useEffect, useRef } from 'react';
 
 export const WindingShader = () => {

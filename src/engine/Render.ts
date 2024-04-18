@@ -15,7 +15,11 @@ import GCPool from './GCPool';
 
 interface I_Event {
     pointerUp: (mouseUp: THREE.Vector2, mousePos: THREE.Vector2) => void;
-    pointerMove: (pos: THREE.Vector2, dir: THREE.Vector2) => void;
+    pointerMove: (info: {
+        pos: THREE.Vector2, dir: THREE.Vector2, coord: THREE.Vector2, isClick: boolean;
+        relativeCoord: THREE.Vector2;
+        speed: THREE.Vector2;
+    }) => void;
     cameraChange: (camera: THREE.Camera) => void;
     cameraMove: (camera: THREE.Camera, pos: THREE.Vector3, target: THREE.Vector3) => void;
 }
@@ -74,6 +78,8 @@ export class Render extends EventEmitter<I_Event>   {
         current: new THREE.Vector2(-10000, -10000),
         last: new THREE.Vector2(-10000, -10000),
         click: new THREE.Vector2(-10000, -10000),
+        onClick: false,
+        relativeCoord: new THREE.Vector2(0, 0)
     };
     private isPerspective: boolean = true;
     /**GC */
@@ -176,6 +182,12 @@ export class Render extends EventEmitter<I_Event>   {
         this.isPerspective = !this.isPerspective;
         this.emit("cameraChange", this.activeCamera);
     }
+    enableCameraShake(xSpeedScale: number = 1.0, ySpeedScale: number = 1.0) {
+        this.addListener('pointerMove', ({ dir, speed }) => {
+            this.activeCamera.position.x += dir.x * speed.x * xSpeedScale;
+            this.activeCamera.position.y += dir.y * speed.y * ySpeedScale;
+        });
+    }
     enableAutoFov() {
         this.autoFov = true;
     }
@@ -206,6 +218,9 @@ export class Render extends EventEmitter<I_Event>   {
         window.onbeforeunload = () => {
             this.dispose();
         };
+        window.onpopstate = () => {
+            this.dispose();
+        };
         this.container.addEventListener('pointerup', this.onPointerUp);
         this.container.addEventListener('pointerdown', this.onPointerDown);
         this.container.addEventListener('mousemove', this.onMouseMove);
@@ -215,15 +230,35 @@ export class Render extends EventEmitter<I_Event>   {
         this.mousePos.last.y = this.mousePos.current.y;
         this.mousePos.current.x = e.clientX;
         this.mousePos.current.y = e.clientY;
-        this.emit('pointerMove', this.mousePos.current, this.mousePos.current.clone().sub(this.mousePos.last).normalize());
+        const mouseDiff = this.mousePos.current.clone().sub(this.mousePos.last);
+        if (this.mousePos.onClick) {
+            this.mousePos.relativeCoord.add(mouseDiff.clone().divide(this.canvasSize.clone()));
+        }
+
+        if (this.mousePos.last.length() > 10000) {
+            this.mousePos.last.x = e.clientX;
+            this.mousePos.last.y = e.clientY;
+        }
+        const speedV2 = this.mousePos.current.clone().sub(this.mousePos.last).divideScalar(100);
+        this.emit('pointerMove', {
+            pos: this.mousePos.current,
+            dir: mouseDiff.normalize(),
+            speed: new THREE.Vector2(Math.abs(speedV2.x), Math.abs(speedV2.y)),
+            coord: this.mousePos.current.clone().divide(this.canvasSize),
+            isClick: this.mousePos.onClick,
+            relativeCoord: this.mousePos.relativeCoord
+        });
     };
     onPointerUp = (e: PointerEvent) => {
+        this.mousePos.onClick = false;
         this.emit('pointerUp', new THREE.Vector2(e.clientX, e.clientY), this.mousePos.click);
     };
     onPointerDown = (e: PointerEvent) => {
+        this.mousePos.onClick = true;
         this.mousePos.click.x = e.clientX;
         this.mousePos.click.y = e.clientY;
     };
+
     /**创建一个debug环境 */
     createDebug(debug: { helper?: boolean; stats?: boolean; gui?: boolean; }) {
         if (debug.helper) {
@@ -297,6 +332,8 @@ export class Render extends EventEmitter<I_Event>   {
     onRender = () => {
     };
     onSizeChange = () => {
+    };
+    onTimeSliceChange = (time: number) => {
 
     };
     /**销毁场景,释放内存 */
@@ -338,13 +375,16 @@ export class Render extends EventEmitter<I_Event>   {
                 if (this.$stats) {
                     this.$stats.update(this.renderer);
                 }
+                this.onTimeSliceChange(Render.GlobalTime.value);
+                this.onRender();
                 if (this.composer) {
                     this.composer.render();
                 } else {
                     this.renderer!.render(this.scene, this.activeCamera);
                     this.renderer2D!.render(this.scene, this.activeCamera);
                 }
-                this.onRender();
+
+
             });
         }
     }

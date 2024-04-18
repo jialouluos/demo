@@ -6,6 +6,22 @@ import { WindingShader } from '@/pages/WindingShader';
 import { SnowFlakeShader } from '@/pages/SnowFlakeShader';
 import { WebWorkerDemoPage } from '@/components/codeShow/WebWorkerDemoPage';
 import { WindowMessagePage } from '@/components/codeShow/WindowMessagePage';
+import { FlameShader } from '@/pages/FlameShader';
+import { VFXImageShader } from '@/pages/VFXImageShader';
+import { FuzzyTransitionShader } from '@/pages/FuzzyTransitionShader';
+import { WaveImageShader } from '@/pages/WaveImage';
+import { SimpleFbmShader } from '@/pages/SimpleFbmShader';
+import { LoopShader } from '@/pages/LoopShader';
+import { SimpleSDFShader } from '@/pages/SimpleSDFShader';
+import { SimpleSDFShadowShader } from '@/pages/SimpleSDFShadowShader';
+import { CodeWaterfallShader } from '@/pages/CodeWaterfallShader';
+
+import { ParticleExplosionMesh } from '@/pages/ParticleExplosionMesh';
+import { ParticleTrackMesh } from '@/pages/ParticleTrackMesh';
+import { ParticleSkyMesh } from '@/pages/ParticleSkyMesh';
+import { DewdropShader } from '@/pages/DewdropShader';
+import { ShardImageMesh } from '@/pages/ShardImageMesh';
+import { FlyLineMesh } from '@/pages/FlyLineMesh';
 export const RouteConfigs: DEMO[] = [
 	{
 		name: '(hook)useBCState',
@@ -22,6 +38,7 @@ export const RouteConfigs: DEMO[] = [
 		pre_img: '',
 	},
 	{
+		zh: '粒子卷绕',
 		name: '(shader)Winding',
 		path: '/shader/winding',
 		element: <WindingShader />,
@@ -29,11 +46,132 @@ export const RouteConfigs: DEMO[] = [
 		pre_img: 'pre/winding.png',
 	},
 	{
-		name: '(shader)SnowFlake',
+		zh: '漫天雪花',
+		name: '(shader)snowFlake',
 		path: '/shader/snowflake',
 		element: <SnowFlakeShader />,
 		dec: '',
 		pre_img: 'pre/snowflake.png',
+	},
+	{
+		zh: '模糊转场',
+		name: '(shader)fuzzyTransition',
+		path: '/shader/fuzzy-transition',
+		element: <FuzzyTransitionShader />,
+		dec: '',
+		pre_img: 'pre/fuzzyTransition.png',
+	},
+	{
+		zh: '图片视效',
+		name: '(shader)VFXImage',
+		path: '/shader/vfx',
+		element: <VFXImageShader />,
+		dec: '',
+		pre_img: 'pre/vfx.png',
+	},
+	{
+		zh: '纹理波浪',
+		name: '(shader)WaveImage',
+		path: '/shader/wave',
+		element: <WaveImageShader />,
+		dec: '',
+		pre_img: 'pre/wave.png',
+	},
+	{
+		zh: '纹理波浪',
+		name: '(shader)Flame',
+		path: '/shader/flame',
+		element: <FlameShader />,
+		dec: '',
+		pre_img: 'pre/flame.png',
+	},
+	{
+		zh: '简易fbm',
+		name: '(shader)simpleFbm',
+		path: '/shader/simple-fbm',
+		element: <SimpleFbmShader />,
+		dec: '',
+		pre_img: 'pre/simple-fbm.png',
+	},
+	{
+		zh: 'loop',
+		name: '(shader)Loop',
+		path: '/shader/loop',
+		element: <LoopShader />,
+		dec: '',
+		pre_img: 'pre/loop.png',
+	},
+	{
+		zh: '简易SDF',
+		name: '(shader)simpleSDF',
+		path: '/shader/simple-sdf',
+		element: <SimpleSDFShader />,
+		dec: '',
+		pre_img: 'pre/simple-sdf.png',
+	},
+	{
+		zh: '简易SDF阴影',
+		name: '(shader)simpleSDFShadow',
+		path: '/shader/simple-sdf-shadow',
+		element: <SimpleSDFShadowShader />,
+		dec: '',
+		pre_img: 'pre/simple-sdf-shadow.png',
+	},
+	{
+		zh: '编码瀑布',
+		name: '(shader)codeWaterfall',
+		path: '/shader/code-waterfall',
+		element: <CodeWaterfallShader />,
+		dec: '',
+		pre_img: 'pre/code-waterfall.png',
+	},
+	{
+		zh: '滴落露珠',
+		name: '(shader)Dewdrop',
+		path: '/shader/dewdrop',
+		element: <DewdropShader />,
+		dec: '',
+		pre_img: 'pre/dewdrop.png',
+	},
+	{
+		zh: '粒子爆炸',
+		name: '(mesh)particleExplosion',
+		path: '/mesh/particle-explosion',
+		element: <ParticleExplosionMesh />,
+		dec: '',
+		pre_img: 'pre/particle-explosion.png',
+	},
+	{
+		zh: '粒子轨迹',
+		name: '(mesh)particleTrack',
+		path: '/mesh/particle-track',
+		element: <ParticleTrackMesh />,
+		dec: '',
+		pre_img: 'pre/particle-track.png',
+	},
+	{
+		zh: '粒子星空',
+		name: '(mesh)particleSky',
+		path: '/mesh/particle-sky',
+		element: <ParticleSkyMesh />,
+		dec: '',
+		pre_img: 'pre/particle-sky.png',
+	},
+	{
+		zh: '碎片切换',
+		name: '(mesh)shardImage',
+		path: '/mesh/shard-image',
+		element: <ShardImageMesh />,
+		dec: '',
+		pre_img: 'pre/shard-image.png',
+	},
+	{
+		zh: '飞线',
+		name: '(mesh)flyLine',
+		path: '/mesh/fly-line',
+		element: <FlyLineMesh />,
+		dec: '',
+		pre_img: 'pre/fly-line.png',
 	},
 ];
 const MyRouter = () => (
