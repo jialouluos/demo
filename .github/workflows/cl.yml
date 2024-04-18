@@ -18,6 +18,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
+      - uses: pnpm/action-setup@v3
+        name: 安装pnpm
+        id: pnpm-install
+        with:
+          version: 8
+          run_install: false
+
       - name: Cache
         # 缓存命中结果会存储在steps.[id].outputs.cache-hit里，该变量在继后的step中可读
         id: cache-dependencies
