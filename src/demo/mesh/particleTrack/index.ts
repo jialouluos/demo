@@ -29,7 +29,6 @@ export class ParticleTrack {
 
 	}
 	createPoint() {
-		console.log(Render.math.parseGLSLChunk(vs));
 		const material = new THREE.ShaderMaterial({
 			vertexColors: true,
 			vertexShader: Render.math.parseGLSLChunk(vs),
