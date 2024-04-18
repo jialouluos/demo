@@ -24,6 +24,7 @@ import { ShardImageMesh } from '@/pages/ShardImageMesh';
 import { FlyLineMesh } from '@/pages/FlyLineMesh';
 export const RouteConfigs: DEMO[] = [
 	{
+		zh: 'useBCState',
 		name: '(hook)useBCState',
 		path: '/hooks/window-message',
 		element: <WindowMessagePage />,
@@ -31,6 +32,7 @@ export const RouteConfigs: DEMO[] = [
 		pre_img: '',
 	},
 	{
+		zh: 'useWebWorker',
 		name: '(hook)useWebWorker',
 		path: '/hooks/webworker',
 		element: <WebWorkerDemoPage />,
@@ -59,7 +61,7 @@ export const RouteConfigs: DEMO[] = [
 		path: '/shader/fuzzy-transition',
 		element: <FuzzyTransitionShader />,
 		dec: '',
-		pre_img: 'pre/fuzzyTransition.png',
+		pre_img: 'pre/fuzzy-transition.png',
 	},
 	{
 		zh: '图片视效',
@@ -174,6 +176,24 @@ export const RouteConfigs: DEMO[] = [
 		pre_img: 'pre/fly-line.png',
 	},
 ];
+// const iframeJson = RouteConfigs.map(item => {
+// 	return {
+// 		title: item.zh,
+// 		id: item.path,
+// 		iframe_url: 'https://www.demo.harver.cn' + item.path,
+// 		catalog_id: item.name.includes('(mesh)')
+// 			? 2
+// 			: item.name.includes('(shader)')
+// 			? 3
+// 			: item.name.includes('(hook)')
+// 			? 1
+// 			: -1,
+// 		description: item.dec,
+// 		order: 2,
+// 		pre_img: item.pre_img ? 'https://www.demo.harver.cn/' + item.pre_img : '',
+// 	};
+// });
+// console.log(iframeJson);
 const MyRouter = () => (
 	<Router>
 		<Routes>
