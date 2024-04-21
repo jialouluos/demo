@@ -114,7 +114,8 @@ export class Render extends EventEmitter<I_Event>   {
             alpha: true,
             antialias: true,
             precision: 'highp',
-            // logarithmicDepthBuffer: true
+            powerPreference: "high-performance",
+            logarithmicDepthBuffer: true
         });
         this.renderer.outputColorSpace = THREE.SRGBColorSpace;
         this.renderer.setClearColor('#000');
