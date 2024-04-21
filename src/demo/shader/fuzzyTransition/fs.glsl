@@ -1,5 +1,5 @@
 precision mediump float;
-
+#define M_PI 3.1415926535897932384626433832795
 #define fragCoord gl_FragCoord
 #define fragColor gl_FragColor
 
