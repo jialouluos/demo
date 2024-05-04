@@ -1,5 +1,5 @@
 import { CodeShow } from '../components/codeShow/CodeShow';
-import WebWorkerDemoString from '@/hooks/WebWorkerDemo?raw';
+import WebWorkerDemoString from '@/demo/hooks/WebWorkerDemo?raw';
 import useWebWorkerString from '@/hooks/useWebWorker?raw';
 import WebWorkerDemo from '@/demo/hooks/WebWorkerDemo';
 
