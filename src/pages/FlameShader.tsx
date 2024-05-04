@@ -24,7 +24,7 @@ export default () => {
 			mapEngine.current && mapEngine.current.dispose();
 			mapEngine.current = null;
 		};
-	}, [mapEngine.current]);
+	}, []);
 	return (
 		<>
 			<div
