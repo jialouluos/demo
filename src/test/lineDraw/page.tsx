@@ -1,12 +1,11 @@
-import { ParticleTrack } from '@/demo/mesh/particleTrack';
-
 import { useEffect, useRef } from 'react';
+import { LineDraw } from '.';
 
-export default() => {
+export default () => {
 	const isInitFinish = useRef(false);
-	const mapEngine = useRef<ParticleTrack | null>(null);
+	const mapEngine = useRef<LineDraw | null>(null);
 
-	const init = async (map: ParticleTrack) => {
+	const init = async (map: LineDraw) => {
 		try {
 			map.render();
 		} catch (err) {
@@ -15,7 +14,7 @@ export default() => {
 	};
 	useEffect(() => {
 		if (isInitFinish.current) return;
-		const map = (mapEngine.current = new ParticleTrack('#canvas_root'));
+		const map = (mapEngine.current = new LineDraw('#canvas_root'));
 		init(map);
 
 		isInitFinish.current = true;

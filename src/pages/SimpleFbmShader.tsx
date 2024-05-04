@@ -1,7 +1,7 @@
 import { SimpleFbm } from '@/demo/shader/simpleFbm';
 import { useEffect, useRef } from 'react';
 
-export const SimpleFbmShader = () => {
+export default() => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<SimpleFbm | null>(null);
 

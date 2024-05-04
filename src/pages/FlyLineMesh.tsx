@@ -2,7 +2,7 @@ import { FlyLine } from '@/demo/mesh/flyLine';
 
 import { useEffect, useRef } from 'react';
 
-export const FlyLineMesh = () => {
+export default() => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<FlyLine | null>(null);
 

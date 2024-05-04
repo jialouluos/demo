@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSendBCState, useReceiveBCState } from '@/hooks/useBCState';
 
-export const WindowMessage = () => {
+export default() => {
 	const [message, setMessage] = useSendBCState<number>('channel_1', 123);
 	const receiveChannel = useReceiveBCState<number>('channel_1', {});
 

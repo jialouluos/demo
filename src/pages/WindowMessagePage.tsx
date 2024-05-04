@@ -1,9 +1,9 @@
-import { CodeShow } from './CodeShow';
+import { CodeShow } from '../components/codeShow/CodeShow';
 import WindowMessageString from '@/pages/WindowMessage?raw';
 import useBCStateString from '@/hooks/useBCState?raw';
-import { WindowMessage } from '@/pages/WindowMessage';
+import WindowMessage from '@/demo/hooks/WindowMessage';
 
-export const WindowMessagePage = () => {
+export default () => {
 	return (
 		<>
 			<CodeShow

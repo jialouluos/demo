@@ -2,7 +2,7 @@ import { WaveImage } from '@/demo/shader/waveImage';
 
 import { useEffect, useRef } from 'react';
 
-export const WaveImageShader = () => {
+export default() => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<WaveImage | null>(null);
 

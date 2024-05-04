@@ -2,7 +2,7 @@ import { VFXImage } from '@/demo/shader/vfx';
 
 import { useEffect, useRef } from 'react';
 
-export const VFXImageShader = () => {
+export default() => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<VFXImage | null>(null);
 

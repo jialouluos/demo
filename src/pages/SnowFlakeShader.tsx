@@ -2,7 +2,7 @@ import { SnowFlake } from '@/demo/shader/snowflake';
 
 import { useEffect, useRef } from 'react';
 
-export const SnowFlakeShader = () => {
+export default () => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<SnowFlake | null>(null);
 

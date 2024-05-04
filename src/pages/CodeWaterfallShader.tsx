@@ -1,7 +1,7 @@
 import { CodeWaterfall } from '@/demo/shader/codeWaterfall';
 import { useEffect, useRef } from 'react';
 
-export const CodeWaterfallShader = () => {
+export default() => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<CodeWaterfall | null>(null);
 

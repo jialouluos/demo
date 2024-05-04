@@ -1,9 +1,9 @@
-import { CodeShow } from './CodeShow';
+import { CodeShow } from '../components/codeShow/CodeShow';
 import WebWorkerDemoString from '@/pages/WebWorkerDemo?raw';
 import useWebWorkerString from '@/hooks/useWebWorker?raw';
-import { WebWorkerDemo } from '@/pages/WebWorkerDemo';
+import WebWorkerDemo from '@/demo/hooks/WebWorkerDemo';
 
-export const WebWorkerDemoPage = () => {
+export default () => {
 	return (
 		<>
 			<CodeShow

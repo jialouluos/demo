@@ -1,12 +1,12 @@
-import { ParticleTrack } from '@/demo/mesh/particleTrack';
+import { LineMergeDrawMesh } from '@/demo/mesh/LineMergeDrawMesh';
 
 import { useEffect, useRef } from 'react';
 
-export default() => {
+export default () => {
 	const isInitFinish = useRef(false);
-	const mapEngine = useRef<ParticleTrack | null>(null);
+	const mapEngine = useRef<LineMergeDrawMesh | null>(null);
 
-	const init = async (map: ParticleTrack) => {
+	const init = async (map: LineMergeDrawMesh) => {
 		try {
 			map.render();
 		} catch (err) {
@@ -15,7 +15,7 @@ export default() => {
 	};
 	useEffect(() => {
 		if (isInitFinish.current) return;
-		const map = (mapEngine.current = new ParticleTrack('#canvas_root'));
+		const map = (mapEngine.current = new LineMergeDrawMesh('#canvas_root'));
 		init(map);
 
 		isInitFinish.current = true;

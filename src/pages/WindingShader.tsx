@@ -1,7 +1,7 @@
 import { Winding } from '@/demo/shader/winding';
 import { useEffect, useRef } from 'react';
 
-export const WindingShader = () => {
+export default () => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<Winding | null>(null);
 

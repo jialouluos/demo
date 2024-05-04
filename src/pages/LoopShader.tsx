@@ -2,7 +2,7 @@ import { Loop } from '@/demo/shader/loop';
 
 import { useEffect, useRef } from 'react';
 
-export const LoopShader = () => {
+export default() => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<Loop | null>(null);
 

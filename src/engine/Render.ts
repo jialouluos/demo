@@ -24,7 +24,7 @@ interface I_Event {
     cameraMove: (camera: THREE.Camera, pos: THREE.Vector3, target: THREE.Vector3) => void;
 }
 
-export class Render extends EventEmitter<I_Event>   {
+export class Render extends EventEmitter<I_Event> {
     /**朝上轴 */
     UP = new THREE.Vector3(0, 1, 0);
     /**挂载DOM */
@@ -225,7 +225,7 @@ export class Render extends EventEmitter<I_Event>   {
         this.container.addEventListener('pointerup', this.onPointerUp);
         this.container.addEventListener('pointerdown', this.onPointerDown);
         this.container.addEventListener('mousemove', this.onMouseMove);
-    };
+    }
     onMouseMove = (e: MouseEvent) => {
         this.mousePos.last.x = this.mousePos.current.x;
         this.mousePos.last.y = this.mousePos.current.y;
@@ -294,8 +294,8 @@ export class Render extends EventEmitter<I_Event>   {
         this._handlePerspectiveCamera(state);
         this._controls.target.copy(state.target);
         if (this.isPerspective) {
-            this._controls.minPolarAngle = 0;
-            this._controls.maxPolarAngle = Math.PI / 2;
+            this._controls.minPolarAngle = -Math.PI;
+            this._controls.maxPolarAngle = Math.PI;
             this._controls.maxDistance = state.far;
             this._controls.minDistance = state.near;
         } else {

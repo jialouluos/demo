@@ -2,7 +2,7 @@ import { ShardImage } from '@/demo/mesh/shardImage';
 
 import { useEffect, useRef } from 'react';
 
-export const ShardImageMesh = () => {
+export default() => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<ShardImage | null>(null);
 

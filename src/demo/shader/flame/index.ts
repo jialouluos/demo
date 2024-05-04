@@ -10,7 +10,7 @@ export class Flame {
 	mapRender: Render;
 	group: THREE.Group = new THREE.Group();
 	constructor(el: string | HTMLElement) {
-		this.mapRender = new Render(el, true, { stats: false });
+		this.mapRender = new Render(el, true, { stats: true });
 		this.mapRender.scene.add(this.group);
 	}
 	dispose() {

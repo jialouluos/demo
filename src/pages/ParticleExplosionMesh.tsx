@@ -2,7 +2,7 @@ import { ParticleExplosion } from '@/demo/mesh/particleExplosion';
 
 import { useEffect, useRef } from 'react';
 
-export const ParticleExplosionMesh = () => {
+export default() => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<ParticleExplosion | null>(null);
 

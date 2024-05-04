@@ -1,27 +1,37 @@
 import App from '../App';
+import { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { DEMO } from '@/types';
 import { BrowserRouter as Router, Navigate } from 'react-router-dom';
-import { WindingShader } from '@/pages/WindingShader';
-import { SnowFlakeShader } from '@/pages/SnowFlakeShader';
-import { WebWorkerDemoPage } from '@/components/codeShow/WebWorkerDemoPage';
-import { WindowMessagePage } from '@/components/codeShow/WindowMessagePage';
-import { FlameShader } from '@/pages/FlameShader';
-import { VFXImageShader } from '@/pages/VFXImageShader';
-import { FuzzyTransitionShader } from '@/pages/FuzzyTransitionShader';
-import { WaveImageShader } from '@/pages/WaveImage';
-import { SimpleFbmShader } from '@/pages/SimpleFbmShader';
-import { LoopShader } from '@/pages/LoopShader';
-import { SimpleSDFShader } from '@/pages/SimpleSDFShader';
-import { SimpleSDFShadowShader } from '@/pages/SimpleSDFShadowShader';
-import { CodeWaterfallShader } from '@/pages/CodeWaterfallShader';
 
-import { ParticleExplosionMesh } from '@/pages/ParticleExplosionMesh';
-import { ParticleTrackMesh } from '@/pages/ParticleTrackMesh';
-import { ParticleSkyMesh } from '@/pages/ParticleSkyMesh';
-import { DewdropShader } from '@/pages/DewdropShader';
-import { ShardImageMesh } from '@/pages/ShardImageMesh';
-import { FlyLineMesh } from '@/pages/FlyLineMesh';
+const VFXImageShader = lazy(() => import('@/pages/VFXImageShader'));
+const FuzzyTransitionShader = lazy(() => import('@/pages/FuzzyTransitionShader'));
+const WaveImageShader = lazy(() => import('@/pages/WaveImage'));
+const SimpleFbmShader = lazy(() => import('@/pages/SimpleFbmShader'));
+
+const SimpleSDFShader = lazy(() => import('@/pages/SimpleSDFShader'));
+const LoopShader = lazy(() => import('@/pages/LoopShader'));
+
+const SimpleSDFShadowShader = lazy(() => import('@/pages/SimpleSDFShadowShader'));
+const CodeWaterfallShader = lazy(() => import('@/pages/CodeWaterfallShader'));
+const ParticleExplosionMesh = lazy(() => import('@/pages/ParticleExplosionMesh'));
+const ParticleTrackMesh = lazy(() => import('@/pages/ParticleTrackMesh'));
+
+const DewdropShader = lazy(() => import('@/pages/DewdropShader'));
+const ParticleSkyMesh = lazy(() => import('@/pages/ParticleSkyMesh'));
+const FlyLineMesh = lazy(() => import('@/pages/FlyLineMesh'));
+const ShardImageMesh = lazy(() => import('@/pages/ShardImageMesh'));
+const SnowFlakeShader = lazy(() => import('@/pages/SnowFlakeShader'));
+
+const FlameShader = lazy(() => import('@/pages/FlameShader'));
+const ExtrudeGeometryUVFixPage = lazy(() => import('@/pages/ExtrudeGeometryUVFixMesh'));
+const LineMergeDrawMesh = lazy(() => import('@/pages/LineMergeDrawMesh'));
+const DigitalScrollDemo = lazy(() => import('@/pages/DigitalScrollDemoPage'));
+
+const WindowMessagePage = lazy(() => import('@/pages/WindowMessagePage'));
+const WebWorkerDemoPage = lazy(() => import('@/pages/WebWorkerDemoPage'));
+const WindingShader = lazy(() => import('@/pages/WindingShader'));
+
 export const RouteConfigs: DEMO[] = [
 	{
 		zh: 'useBCState',
@@ -175,7 +185,32 @@ export const RouteConfigs: DEMO[] = [
 		dec: '',
 		pre_img: 'pre/fly-line.png',
 	},
+	{
+		zh: '挤压几何体UV修正',
+		name: '(mesh)extrudeGeoUVFix',
+		path: '/mesh/extrude-geometry-uv-fix',
+		element: <ExtrudeGeometryUVFixPage />,
+		dec: '',
+		pre_img: 'pre/extrude-geometry-uv-fix.png',
+	},
+	{
+		zh: '线顶点合并',
+		name: '(mesh)lineMergeDraw',
+		path: '/mesh/line-merge-draw',
+		element: <LineMergeDrawMesh />,
+		dec: '',
+		pre_img: 'pre/line-merge-draw.png',
+	},
+	{
+		zh: '数字滚动',
+		name: '(css)digital-scroll',
+		path: '/css/digital-scroll',
+		element: <DigitalScrollDemo />,
+		dec: '',
+		pre_img: 'pre/digital-scroll.png',
+	},
 ];
+
 // const iframeJson = RouteConfigs.map(item => {
 // 	return {
 // 		title: item.zh,
@@ -187,6 +222,8 @@ export const RouteConfigs: DEMO[] = [
 // 			? 3
 // 			: item.name.includes('(hook)')
 // 			? 1
+// 			: item.name.includes('(css)')
+// 			? 4
 // 			: -1,
 // 		description: item.dec,
 // 		order: 2,

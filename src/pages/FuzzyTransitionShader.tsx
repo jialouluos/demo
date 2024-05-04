@@ -1,7 +1,7 @@
 import { FuzzyTransition } from '@/demo/shader/fuzzyTransition';
 import { useEffect, useRef } from 'react';
 
-export const FuzzyTransitionShader = () => {
+export default() => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<FuzzyTransition | null>(null);
 

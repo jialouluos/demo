@@ -1,15 +1,18 @@
 @mixin pointer() {
 	cursor: pointer;
 }
+
 @mixin center() {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	
 }
 
 @mixin shadow {
 	box-shadow: 0 rem(0.1) rem(0.2) rem(0) var(--shadow);
 }
+
 @mixin shadow_hover($is_strong) {
 	@include shadow();
 	transition: all 0.3s;

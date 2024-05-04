@@ -2,7 +2,7 @@ import { Dewdrop } from '@/demo/shader/dewdrop';
 
 import { useEffect, useRef } from 'react';
 
-export const DewdropShader = () => {
+export default() => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<Dewdrop | null>(null);
 

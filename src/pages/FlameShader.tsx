@@ -2,7 +2,7 @@ import { Flame } from '@/demo/shader/flame';
 
 import { useEffect, useRef } from 'react';
 
-export const FlameShader = () => {
+export default () => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<Flame | null>(null);
 

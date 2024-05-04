@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useWebWorker } from '../hooks/useWebWorker';
+import { useWebWorker } from '../../hooks/useWebWorker';
 
-export const WebWorkerDemo = () => {
-	const [proxy, _] = useState(() =>
+export default () => {
+	const [proxy] = useState(() =>
 		useWebWorker(() => {
 			return {
 				name: 'hello worker',

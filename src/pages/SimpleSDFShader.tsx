@@ -2,7 +2,7 @@ import { SimpleSDF } from '@/demo/shader/simpleSDF';
 
 import { useEffect, useRef } from 'react';
 
-export const SimpleSDFShader = () => {
+export default() => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<SimpleSDF | null>(null);
 

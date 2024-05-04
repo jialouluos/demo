@@ -2,7 +2,7 @@ import { ParticleSky } from '@/demo/mesh/particleSky';
 
 import { useEffect, useRef } from 'react';
 
-export const ParticleSkyMesh = () => {
+export default() => {
 	const isInitFinish = useRef(false);
 	const mapEngine = useRef<ParticleSky | null>(null);
 
