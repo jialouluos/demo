@@ -1,5 +1,5 @@
 import { CodeShow } from '../components/codeShow/CodeShow';
-import WindowMessageString from '@/pages/WindowMessage?raw';
+import WindowMessageString from '@/hooks/WindowMessage?raw';
 import useBCStateString from '@/hooks/useBCState?raw';
 import WindowMessage from '@/demo/hooks/WindowMessage';
 

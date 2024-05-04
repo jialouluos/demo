@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useWebWorker } from '../../hooks/useWebWorker';
+import { useWebWorker } from '@/hooks/useWebWorker';
 
 export default () => {
 	const [proxy] = useState(() =>
