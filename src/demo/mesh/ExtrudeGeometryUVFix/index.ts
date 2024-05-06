@@ -99,9 +99,14 @@ export class ExtrudeGeometryUVFix {
 		this.mapRender.scene.add(mesh);
 
 		this.startRender();
+		// const cameraHelper = new THREE.CameraHelper(this.mapRender.orthographicCamera);
+		// this.mapRender.scene.add(cameraHelper);
 		this.mapRender.onRender = () => {
 			sunLight.position.set(100, Render.GlobalTime.value * 10 % 200, 200);
+
+
 		};
+
 	}
 
 	startRender = () => {

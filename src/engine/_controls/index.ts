@@ -165,9 +165,11 @@ export class OrbitControls extends EventDispatcher {
         const twoPI = 2 * Math.PI;
         this.update = () => {
             const position = this.object.position;
+
             offset.copy(position).sub(this.target);//计算相机距离焦点的相对坐标
             offset.applyQuaternion(quat);//当defaultUp不为y时，进行相应变换修正
             this.spherical.setFromVector3(offset);//设置球体坐标系，通过向量的方式
+
             if (this.enableDamping) {
                 this.spherical.theta += this.rotate.sphericalDelta.theta * this.dampingFactor;
                 this.spherical.phi += this.rotate.sphericalDelta.phi * this.dampingFactor;
@@ -175,6 +177,7 @@ export class OrbitControls extends EventDispatcher {
                 this.spherical.theta += this.rotate.sphericalDelta.theta;
                 this.spherical.phi += this.rotate.sphericalDelta.phi;
             }
+
             let min = this.minAzimuthAngle;
             let max = this.maxAzimuthAngle;
             if (isFinite(min) && isFinite(max)) {
@@ -188,7 +191,9 @@ export class OrbitControls extends EventDispatcher {
                         Math.min(max, this.spherical.theta);
                 }
             }
+
             this.spherical.phi = Math.max(this.minPolarAngle, Math.min(this.maxPolarAngle, this.spherical.phi));
+
             this.spherical.makeSafe();
             this.spherical.radius *= this.scale;
             this.spherical.radius = Math.max(this.minDistance, Math.min(this.maxDistance, this.spherical.radius));
@@ -197,6 +202,7 @@ export class OrbitControls extends EventDispatcher {
             } else {
                 this.target.add(this.pan.panOffset);//应用偏移
             }
+
             offset.setFromSpherical(this.spherical);//经过min与max的修正，此时offset的范围是合法的
 
             // rotate offset back to "camera-up-vector-is-up" space

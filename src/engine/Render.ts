@@ -164,7 +164,13 @@ export class Render extends EventEmitter<I_Event> {
         this.addListener("cameraChange", () => {
             this._handleUpdateCamera();
         });
+        this.addListener("cameraMove", () => {
+            this._handleUpdateCamera();
+        });
         this.addSelfListenEvent();
+        if (isShader) {
+            this._handleUpdateCamera();
+        }
     }
     /**uniform u_Time */
     get u_Time() {
@@ -196,8 +202,8 @@ export class Render extends EventEmitter<I_Event> {
         return {
             ...Render.GlobalVar,
             distance: this._controls.getDistance(),
-            phi: Render.math.deg2Rad(this._controls.getPolarAngle()),
-            theta: Render.math.deg2Rad(this._controls.getAzimuthalAngle()),
+            phi: this._controls.getPolarAngle(),
+            theta: this._controls.getAzimuthalAngle(),
             target: this._controls.target.clone(),
             aspect: this.aspect
         };
@@ -225,6 +231,11 @@ export class Render extends EventEmitter<I_Event> {
         this.container.addEventListener('pointerup', this.onPointerUp);
         this.container.addEventListener('pointerdown', this.onPointerDown);
         this.container.addEventListener('mousemove', this.onMouseMove);
+        this.container.addEventListener("keydown", (e) => {
+            if (e.key === "f") {
+                this.changeCamera();
+            }
+        });
     }
     onMouseMove = (e: MouseEvent) => {
         this.mousePos.last.x = this.mousePos.current.x;
@@ -282,7 +293,7 @@ export class Render extends EventEmitter<I_Event> {
             this.canvasSize.copy(newSize);
             this.renderer?.setPixelRatio(window.devicePixelRatio);
             this.renderer?.setSize(newSize.x, newSize.y, true);
-            this.renderer2D?.setSize(newSize.x, newSize.y);
+            this.renderer2D?.setSize(newSize.x, newSize.y,);
             this.onSizeChange();
             this._handleUpdateCamera();
         }
@@ -290,9 +301,13 @@ export class Render extends EventEmitter<I_Event> {
     private _handleUpdateCamera() {
         if (this.updating) return;
         this.updating = true;
+
         const state = this.getCameraCurrentState();
+
         this._handlePerspectiveCamera(state);
+
         this._controls.target.copy(state.target);
+
         if (this.isPerspective) {
             this._controls.minPolarAngle = -Math.PI;
             this._controls.maxPolarAngle = Math.PI;
@@ -301,8 +316,11 @@ export class Render extends EventEmitter<I_Event> {
         } else {
             this._controls.minPolarAngle = this._controls.maxPolarAngle = state.phi;
         }
+
         this._handleOrthographicCamera(state);
+
         this._controls.update();
+
         this.updating = false;
     }
     private _handlePerspectiveCamera(state: Record<string, any>) {
@@ -316,25 +334,28 @@ export class Render extends EventEmitter<I_Event> {
 
     }
     private _handleOrthographicCamera(state: Record<string, any>) {
-        this.orthographicCamera.position.set(state.target.x, state.target.y, state.far / 2);
-        this.orthographicCamera.quaternion.setFromAxisAngle(this.UP.clone(), Render.math.rad2Deg(state.theta));
+        this.orthographicCamera.position.set(state.target.x, state.target.y, 0);
+
+        this.orthographicCamera.quaternion.setFromAxisAngle(this.UP.clone(), state.theta);
         this.orthographicCamera.left = (-state.distance / 2) * state.aspect;
         this.orthographicCamera.right = (state.distance / 2) * state.aspect;
 
         this.orthographicCamera.top = (state.distance / 2);
         this.orthographicCamera.bottom = (-state.distance / 2);
 
-        this.orthographicCamera.near = state.near;
+        this.orthographicCamera.near = -state.far;
         this.orthographicCamera.far = state.far;
 
         this.orthographicCamera.updateProjectionMatrix();
+
 
     }
     onRender = () => {
     };
     onSizeChange = () => {
     };
-    onTimeSliceChange = (time: number) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onTimeSliceChange = (_time: number) => {
 
     };
     /**销毁场景,释放内存 */
@@ -345,6 +366,7 @@ export class Render extends EventEmitter<I_Event> {
             this.container.removeEventListener('pointerup', this.onPointerUp);
             this.container.removeEventListener('pointerdown', this.onPointerDown);
             this.container.removeEventListener('mousemove', this.onMouseMove);
+
             Render.GCPool && Render.GCPool.allDispose();
             this.scene.clear();
             this.$stats && this.container!.removeChild(this.$stats.domElement);
@@ -370,9 +392,7 @@ export class Render extends EventEmitter<I_Event> {
                 if (this._clock) {
                     Render.GlobalTime.value = Render.GlobalTime.value + (this._clock.getDelta()) * this.timeScale;
                 }
-                if (this._controls) {
-                    this._controls.update();
-                }
+
                 if (this.$stats) {
                     this.$stats.update(this.renderer);
                 }

@@ -43,11 +43,14 @@ export class FuzzyTransition {
 		const mesh = new THREE.Mesh(geometry, material);
 		this.mapRender.scene.add(mesh);
 		mesh.scale.set(this.mapRender.canvasSize.x, this.mapRender.canvasSize.y, 1);
+		console.log(this.mapRender.canvasSize);
+		console.log(this.mapRender.activeCamera);
 		this.mapRender.onSizeChange = () => {
 			material.uniforms.u_bg.value = this.mapRender.aspect > 1.25 ? bg_w_1 : bg_h_1;
 			material.uniforms.u_bg2.value = this.mapRender.aspect > 1.25 ? bg_w_2 : bg_h_2;
 			material.uniformsNeedUpdate = true;
 			mesh.scale.set(this.mapRender.canvasSize.x, this.mapRender.canvasSize.y, 1);
+			console.log(this.mapRender.activeCamera);
 		};
 		this.startRender();
 
