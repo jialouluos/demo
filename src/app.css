@@ -54,6 +54,8 @@ body {
 	width: 100%;
 	font-size: 1rem;
 	height: 100vh;
+	background-color: #050505;
+	background: radial-gradient(ellipse at center, rgba(43, 45, 48, 1) 0%, rgba(0, 0, 0, 1) 100%);
 }
 
 li {

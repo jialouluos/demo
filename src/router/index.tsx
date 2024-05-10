@@ -210,6 +210,10 @@ export const RouteConfigs: DEMO[] = [
 		pre_img: 'pre/digital-scroll.png',
 	},
 ];
+// import.meta.glob('../pages/*', {
+// 	eager: true,
+// 	import: 'default',
+// });
 
 // const iframeJson = RouteConfigs.map(item => {
 // 	return {

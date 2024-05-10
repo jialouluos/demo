@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { EventEmitter } from 'eventemitter3';
-import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 import { OrbitControls } from './_controls';
 import { Stats } from './_stats';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -33,8 +34,10 @@ export class Render extends EventEmitter<I_Event> {
     canvasSize!: THREE.Vector2;
     /**渲染器 */
     renderer!: THREE.WebGLRenderer | null;
-    /**2D渲染器 */
+    /**CSS2D渲染器 */
     renderer2D!: CSS2DRenderer | null;
+    /**CSS3D渲染器 */
+    renderer3D!: CSS3DRenderer | null;
     /**透视相机 */
     perspectiveCamera!: THREE.PerspectiveCamera;
     /**正交相机 */
@@ -82,6 +85,9 @@ export class Render extends EventEmitter<I_Event> {
         relativeCoord: new THREE.Vector2(0, 0)
     };
     private isPerspective: boolean = true;
+    private isInitFinish: boolean = false;
+    private isEnableCSS2D: boolean = false;
+    private isEnableCSS3D: boolean = false;
     /**GC */
     static GCPool = new GCPool();
     static GlobalTime = { value: 0.0 };
@@ -93,7 +99,7 @@ export class Render extends EventEmitter<I_Event> {
         target: new THREE.Vector3(0, 0, 0)
     };
     private updating = false;
-    constructor(el: string | HTMLElement, isShader: boolean, debug: { helper?: boolean; stats?: boolean; gui?: boolean; }) {
+    constructor(el: string | HTMLElement, isShader: boolean, options: { helper?: boolean; stats?: boolean; gui?: boolean; isEnableCSS2D?: boolean; isEnableCSS3D?: boolean; }) {
         super();
         if (isShader) {
             this.autoFov = true;
@@ -107,9 +113,6 @@ export class Render extends EventEmitter<I_Event> {
         if (!this.container) throw Error('container is null!');
         this.canvasSize = new THREE.Vector2(this.container.clientWidth, this.container.clientHeight);
 
-        const resizeObserver = new ResizeObserver(this._handleCanvasSize);
-        resizeObserver.observe(this.container!);
-
         this.renderer = new THREE.WebGLRenderer({
             alpha: true,
             antialias: true,
@@ -121,13 +124,22 @@ export class Render extends EventEmitter<I_Event> {
         this.renderer.setClearColor('#000');
         this.renderer.setSize(this.canvasSize.x, this.canvasSize.y);
         this.container.appendChild(this.renderer.domElement);
-
-        this.renderer2D = new CSS2DRenderer();
-        this.renderer2D.setSize(this.canvasSize.x, this.canvasSize.y);
-        this.renderer2D.domElement.style.position = 'absolute';
-        this.renderer2D.domElement.style.top = '0px';
-        this.container.appendChild(this.renderer2D.domElement);
-
+        this.isEnableCSS2D = options.isEnableCSS2D ?? false;
+        this.isEnableCSS3D = options.isEnableCSS3D ?? false;
+        if (this.isEnableCSS2D) {
+            this.renderer2D = new CSS2DRenderer();
+            this.renderer2D.setSize(this.canvasSize.x, this.canvasSize.y);
+            this.renderer2D.domElement.style.position = 'absolute';
+            this.renderer2D.domElement.style.top = '0px';
+            this.container.appendChild(this.renderer2D.domElement);
+        }
+        if (this.isEnableCSS3D) {
+            this.renderer3D = new CSS3DRenderer();
+            this.renderer3D.setSize(this.canvasSize.x, this.canvasSize.y);
+            this.renderer3D.domElement.style.position = 'absolute';
+            this.renderer3D.domElement.style.top = '0px';
+            this.container.appendChild(this.renderer3D.domElement);
+        }
         const position = Render.GlobalVar.position;
         const target = Render.GlobalVar.target;
         const zoom = Render.GlobalVar.position.length();
@@ -138,7 +150,7 @@ export class Render extends EventEmitter<I_Event> {
         this.lightGroups.add(dirLight);
         this.scene.add(this.lightGroups);
 
-        this.createDebug(debug);
+        this.createDebug({ ...options });
 
         this.perspectiveCamera = new THREE.PerspectiveCamera(Render.GlobalVar.fov, this.aspect, Render.GlobalVar.near, Render.GlobalVar.far);
         this.perspectiveCamera.position.copy(position);
@@ -149,7 +161,7 @@ export class Render extends EventEmitter<I_Event> {
         this.orthographicCamera.position.set(target.x, target.y, Render.GlobalVar.far / 2);
         this.orthographicCamera.lookAt(target);
 
-        this._controls = new OrbitControls(this.perspectiveCamera, this.renderer2D.domElement);
+        this._controls = new OrbitControls(this.perspectiveCamera, this.elTargetRenderer!.domElement);
         this._controls.target.copy(target);
         this._controls.addEventListener("change", () => {
             if (!this.updating) {
@@ -167,10 +179,10 @@ export class Render extends EventEmitter<I_Event> {
         this.addListener("cameraMove", () => {
             this._handleUpdateCamera();
         });
-        this.addSelfListenEvent();
-        if (isShader) {
-            this._handleUpdateCamera();
-        }
+        this.addListenEvent();
+        const resizeObserver = new ResizeObserver(this._handleCanvasSize);
+        resizeObserver.observe(this.container!);
+        this.isInitFinish = true;
     }
     /**uniform u_Time */
     get u_Time() {
@@ -185,6 +197,9 @@ export class Render extends EventEmitter<I_Event> {
     get activeControls() {
         return this._controls;
     }
+    get elTargetRenderer() {
+        return this.isEnableCSS2D ? this.renderer2D : this.isEnableCSS3D ? this.renderer3D : this.renderer;
+    }
     changeCamera() {
         this.isPerspective = !this.isPerspective;
         this.emit("cameraChange", this.activeCamera);
@@ -194,9 +209,6 @@ export class Render extends EventEmitter<I_Event> {
             this.activeCamera.position.x += dir.x * speed.x * xSpeedScale;
             this.activeCamera.position.y += dir.y * speed.y * ySpeedScale;
         });
-    }
-    enableAutoFov() {
-        this.autoFov = true;
     }
     getCameraCurrentState() {
         return {
@@ -220,24 +232,129 @@ export class Render extends EventEmitter<I_Event> {
         this._rayCaster.setFromCamera(cursorCoords, this.activeCamera);
         return this._rayCaster.intersectObjects(objects, recursive);
     }
-    /**添加事件 */
-    addSelfListenEvent(): void {
+    createDebug(debug: { helper?: boolean; stats?: boolean; gui?: boolean; }) {
+        if (debug.helper) {
+            this.scene.add(new THREE.AxesHelper(100000));
+        }
+        if (debug.stats) {
+            this.$stats = Stats();
+            this.container!.appendChild(this.$stats.domElement);
+        }
+        if (debug.gui) {
+            this.$gui = new GUI();
+        }
+    }
+    addCSS3DObject(content: string, rootClass?: string,) {
+        if (!this.isEnableCSS3D) return;
+        const _element = document.createElement('div');
+        _element.innerHTML = content;
+        _element.className = rootClass ?? "";
+        if (!rootClass) {
+            _element.style.display = "flex";
+            _element.style.width = "max-content";
+            _element.style.height = "max-content";
+            _element.style.justifyContent = "center";
+            _element.style.alignItems = "center";
+        }
+        return new CSS3DObject(_element);
+    }
+    addCSS2DObject(content: string, rootClass?: string,) {
+        if (!this.isEnableCSS2D) return;
+        const _element = document.createElement('div');
+        _element.innerHTML = content;
+        _element.className = rootClass ?? "";
+        if (!rootClass) {
+            _element.style.display = "flex";
+            _element.style.width = "max-content";
+            _element.style.height = "max-content";
+            _element.style.justifyContent = "center";
+            _element.style.alignItems = "center";
+        }
+        return new CSS2DObject(_element);
+    }
+    onRender = () => {
+    };
+    onSizeChange = () => {
+    };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onTimeSliceChange = (_time: number) => {
+
+    };
+    /**销毁场景,释放内存 */
+    dispose(): void {
+        this.stopRender();
+        Render.GCPool.track(this.scene);
+        try {
+            this.removeAllListeners();
+            this.container.removeEventListener('pointerup', this._onPointerUp);
+            this.container.removeEventListener('pointerdown', this._onPointerDown);
+            this.container.removeEventListener('mousemove', this._onMouseMove);
+            this.container.removeEventListener("keydown", this._onKeyDown);
+            Render.GCPool && Render.GCPool.allDispose();
+            this.scene.clear();
+            this.$stats && this.container!.removeChild(this.$stats.domElement);
+            this.$gui && document.querySelector('.lil-gui')?.remove();
+            if (this.renderer) {
+                this.renderer?.dispose();
+                this.renderer?.forceContextLoss();
+                const gl = this.renderer?.domElement.getContext('webgl');
+                gl && gl.getExtension('WEBGL_lose_context');
+                this.container!.removeChild(this.renderer.domElement);
+                this.info();
+                this.renderer = null;
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    /**场景重渲染 */
+    render(): void {
+        if (this.renderer) {
+            this._clock.start();
+            this.renderer.setAnimationLoop(() => {
+                if (this._clock) {
+                    Render.GlobalTime.value = Render.GlobalTime.value + (this._clock.getDelta()) * this.timeScale;
+                }
+
+                if (this.$stats) {
+                    this.$stats.update(this.renderer);
+                }
+                this.onTimeSliceChange(Render.GlobalTime.value);
+                this.onRender();
+                if (this.composer) {
+                    this.composer.render();
+                } else {
+                    this.renderer!.render(this.scene, this.activeCamera);
+                    this.renderer2D?.render(this.scene, this.activeCamera);
+                    this.renderer3D?.render(this.scene, this.activeCamera);
+                }
+
+
+            });
+        }
+    }
+    stopRender() {
+        this.renderer?.setAnimationLoop(null);
+        this._clock.stop();
+    }
+    /**日志 */
+    public info() {
+        console.log(this.renderer!.info);
+        Render.GCPool.info();
+    }
+    addListenEvent(): void {
         window.onbeforeunload = () => {
             this.dispose();
         };
         window.onpopstate = () => {
             this.dispose();
         };
-        this.container.addEventListener('pointerup', this.onPointerUp);
-        this.container.addEventListener('pointerdown', this.onPointerDown);
-        this.container.addEventListener('mousemove', this.onMouseMove);
-        this.container.addEventListener("keydown", (e) => {
-            if (e.key === "f") {
-                this.changeCamera();
-            }
-        });
+        this.container.addEventListener('pointerup', this._onPointerUp);
+        this.container.addEventListener('pointerdown', this._onPointerDown);
+        this.container.addEventListener('mousemove', this._onMouseMove);
+        this.container.addEventListener("keydown", this._onKeyDown);
     }
-    onMouseMove = (e: MouseEvent) => {
+    private _onMouseMove = (e: MouseEvent) => {
         this.mousePos.last.x = this.mousePos.current.x;
         this.mousePos.last.y = this.mousePos.current.y;
         this.mousePos.current.x = e.clientX;
@@ -261,39 +378,31 @@ export class Render extends EventEmitter<I_Event> {
             relativeCoord: this.mousePos.relativeCoord
         });
     };
-    onPointerUp = (e: PointerEvent) => {
+    private _onPointerUp = (e: PointerEvent) => {
         this.mousePos.onClick = false;
         this.emit('pointerUp', new THREE.Vector2(e.clientX, e.clientY), this.mousePos.click);
     };
-    onPointerDown = (e: PointerEvent) => {
+    private _onPointerDown = (e: PointerEvent) => {
         this.mousePos.onClick = true;
         this.mousePos.click.x = e.clientX;
         this.mousePos.click.y = e.clientY;
     };
-
-    /**创建一个debug环境 */
-    createDebug(debug: { helper?: boolean; stats?: boolean; gui?: boolean; }) {
-        if (debug.helper) {
-            this.scene.add(new THREE.AxesHelper(100000));
+    private _onKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "f") {
+            this.changeCamera();
         }
-        if (debug.stats) {
-            this.$stats = Stats();
-            this.container!.appendChild(this.$stats.domElement);
-        }
-        if (debug.gui) {
-            this.$gui = new GUI();
-        }
-    }
+    };
     private _handleCanvasSize = ([_entries]: ResizeObserverEntry[]) => {
         const width = _entries.contentRect.width;
         const height = _entries.contentRect.height;
         const newSize = new THREE.Vector2(width, height);
         const isNeedResetCanvasSize = this.canvasSize.equals(newSize);
-        if (!isNeedResetCanvasSize) {
+        if (!isNeedResetCanvasSize || !this.isInitFinish) {
             this.canvasSize.copy(newSize);
             this.renderer?.setPixelRatio(window.devicePixelRatio);
             this.renderer?.setSize(newSize.x, newSize.y, true);
             this.renderer2D?.setSize(newSize.x, newSize.y,);
+            this.renderer3D?.setSize(newSize.x, newSize.y,);
             this.onSizeChange();
             this._handleUpdateCamera();
         }
@@ -334,7 +443,12 @@ export class Render extends EventEmitter<I_Event> {
 
     }
     private _handleOrthographicCamera(state: Record<string, any>) {
-        this.orthographicCamera.position.set(state.target.x, state.target.y, 0);
+
+        if (this.UP.clone().dot(new THREE.Vector3(0, 0, 1))) {
+            this.orthographicCamera.position.set(state.target.x, state.target.y, 0);//y up -> 0; z up -> state.far/2
+        } else {
+            this.orthographicCamera.position.set(state.target.x, state.target.y, state.far / 2);
+        }
 
         this.orthographicCamera.quaternion.setFromAxisAngle(this.UP.clone(), state.theta);
         this.orthographicCamera.left = (-state.distance / 2) * state.aspect;
@@ -342,82 +456,16 @@ export class Render extends EventEmitter<I_Event> {
 
         this.orthographicCamera.top = (state.distance / 2);
         this.orthographicCamera.bottom = (-state.distance / 2);
+        if (this.UP.clone().dot(new THREE.Vector3(0, 0, 1))) {
+            this.orthographicCamera.near = -state.far;//y up -> -state.far ; z up -> 0.1
+        } else {
+            this.orthographicCamera.near = 0.1;//y up -> -state.far ; z up -> 0.1
+        }
 
-        this.orthographicCamera.near = -state.far;
         this.orthographicCamera.far = state.far;
 
         this.orthographicCamera.updateProjectionMatrix();
 
 
     }
-    onRender = () => {
-    };
-    onSizeChange = () => {
-    };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onTimeSliceChange = (_time: number) => {
-
-    };
-    /**销毁场景,释放内存 */
-    dispose(): void {
-        this.stopRender();
-        Render.GCPool.track(this.scene);
-        try {
-            this.container.removeEventListener('pointerup', this.onPointerUp);
-            this.container.removeEventListener('pointerdown', this.onPointerDown);
-            this.container.removeEventListener('mousemove', this.onMouseMove);
-
-            Render.GCPool && Render.GCPool.allDispose();
-            this.scene.clear();
-            this.$stats && this.container!.removeChild(this.$stats.domElement);
-            this.$gui && document.querySelector('.lil-gui')?.remove();
-            if (this.renderer) {
-                this.renderer?.dispose();
-                this.renderer?.forceContextLoss();
-                const gl = this.renderer?.domElement.getContext('webgl');
-                gl && gl.getExtension('WEBGL_lose_context');
-                this.container!.removeChild(this.renderer.domElement);
-                this.info();
-                this.renderer = null;
-            }
-        } catch (e) {
-            console.log(e);
-        }
-    }
-    /**场景重渲染 */
-    render(): void {
-        if (this.renderer) {
-            this._clock.start();
-            this.renderer.setAnimationLoop(() => {
-                if (this._clock) {
-                    Render.GlobalTime.value = Render.GlobalTime.value + (this._clock.getDelta()) * this.timeScale;
-                }
-
-                if (this.$stats) {
-                    this.$stats.update(this.renderer);
-                }
-                this.onTimeSliceChange(Render.GlobalTime.value);
-                this.onRender();
-                if (this.composer) {
-                    this.composer.render();
-                } else {
-                    this.renderer!.render(this.scene, this.activeCamera);
-                    this.renderer2D!.render(this.scene, this.activeCamera);
-                }
-
-
-            });
-        }
-    }
-    stopRender() {
-        this.renderer?.setAnimationLoop(null);
-        this._clock.stop();
-    }
-
-    /**日志 */
-    public info() {
-        console.log(this.renderer!.info);
-        Render.GCPool.info();
-    }
-
 }

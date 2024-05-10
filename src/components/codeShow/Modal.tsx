@@ -10,7 +10,7 @@ export const Modal = ({ children, cancel }: IProps) => {
 	return (
 		<div
 			className={`${style.modal_mask} ${show ? style.show : style.hidden}`}
-			onAnimationEnd={_ => {
+			onAnimationEnd={() => {
 				!show && cancel();
 			}}
 			onClick={() => {

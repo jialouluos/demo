@@ -6,6 +6,7 @@ interface IProps {
 }
 
 export const List = ({ infos }: IProps) => {
+
 	return (
 		<div className={style.list}>
 			{infos.map(item => {
