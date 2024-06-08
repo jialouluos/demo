@@ -1,8 +1,7 @@
 import App from '../App';
-import { lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import { Routes, Route, BrowserRouter as Router, Navigate } from 'react-router-dom';
 import { DEMO } from '@/types';
-import { BrowserRouter as Router, Navigate } from 'react-router-dom';
 
 const VFXImageShader = lazy(() => import('@/pages/VFXImageShader'));
 const FuzzyTransitionShader = lazy(() => import('@/pages/FuzzyTransitionShader'));
@@ -236,30 +235,33 @@ export const RouteConfigs: DEMO[] = [
 // });
 // console.log(iframeJson);
 const MyRouter = () => (
-	<Router>
-		<Routes>
-			<Route
-				path={'/'}
-				element={<App />}></Route>
-			{RouteConfigs.map(item => {
-				return (
-					<Route
-						key={item.path}
-						path={item.path}
-						element={item.element}></Route>
-				);
-			})}
-			<Route
-				path='*'
-				element={
-					<Navigate
-						replace
-						to='/'
-					/>
-				}
-			/>
-		</Routes>
-	</Router>
+	<Suspense>
+		<Router>
+			<Routes>
+				<Route
+					path={'/'}
+					element={<App />}></Route>
+				{RouteConfigs.map(item => {
+					return (
+						<Route
+							key={item.path}
+							path={item.path}
+							element={item.element}></Route>
+					);
+				})}
+
+				<Route
+					path='*'
+					element={
+						<Navigate
+							replace
+							to='/'
+						/>
+					}
+				/>
+			</Routes>
+		</Router>
+	</Suspense>
 );
 
 export default MyRouter;

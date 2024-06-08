@@ -1,0 +1,156 @@
+@import "../../global.scss";
+.container {
+  @include center();
+  width: 100%;
+  height: 100%;
+  /* background-color: red; */
+}
+.appoint {
+  @include simple_box();
+  margin: 1rem;
+  display: flow-root;
+}
+.timePicker {
+  @include center();
+  margin: 1rem 0px;
+gap:1rem;
+  .roomSelectBox {
+    flex: 0 0 10rem;
+  }
+}
+.timeLineBox {
+  overflow: auto;
+  width: 100%;
+  height: 36rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+@mixin wapper(){
+  @include center();
+  align-items: flex-start;
+  height: 100%;
+  gap: 2rem;
+  flex-wrap: wrap;
+  & > h4 {
+    height: 1rem;
+    position: sticky;
+    top:0px;
+    z-index: 999;
+    background-color: #91cc75;
+    width:100%;
+    @include center();
+  }
+  & > div {
+    width: 100%;
+    height: max-content;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: relative;
+   
+    & > span {
+      @content;
+    }
+  }
+}
+.timeLineWapper {
+  flex:1;
+  min-width: 140px;
+
+  @include wapper(){
+    border: 1px solid #dee0e3;
+    border-collapse: collapse;
+    border-spacing: 0;
+    @include center();
+    width:100%;
+    &>div{
+      margin: 0px;
+      padding: 0.3rem;
+      cursor: pointer;
+    }
+  };
+}
+.hoursLineWapper {
+  flex:1;
+  min-width: 140px;
+  max-width: 160px;
+  @include wapper(){
+    @include center();
+    width:100%;
+  }
+}
+.container2 {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  width: 97%;
+  height: 98%;
+  margin-top: 2%;
+  /* background-color:green; */
+}
+
+.operate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 1.5%;
+  box-sizing: border-box;
+  width: 100%;
+  height: 10%;
+  /* background-color: red; */
+  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+  box-sizing: border-box;
+  /* padding: 1px 10px; */
+  margin-top: 1%;
+  width: 100%;
+}
+
+.operate .cascader {
+  margin-left: 0.5%;
+}
+
+.operate Button {
+  margin-left: 0.5%;
+}
+
+.big {
+
+  background-color: white;
+
+}
+.title {
+  width: 100px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.dd {
+  background-color: #c4b8b8;
+
+}
+.open {
+  background-color: white;
+ 
+}
+.do {
+background-color: #D3D3;
+
+}
+.doSubscribed {
+  background-color: #fac858;
+}
+
+.doExpireSubscribe {
+  background-color: #d3d3;
+}
+
+.doComplete {
+  background-color: #91cc75;
+}
+.black {
+  background-color: black;
+}
